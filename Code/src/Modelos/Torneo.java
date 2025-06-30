@@ -23,7 +23,10 @@ public class Torneo {
     }
 
     public void setIdTorneo(int idTorneo) {
-        this.idTorneo = idTorneo;
+        if (idTorneo > 0) {
+            this.idTorneo = idTorneo;
+        }
+        // Solo asigna si el ID es positivo
     }
 
     public String getNombreTorneo() {
@@ -31,7 +34,10 @@ public class Torneo {
     }
 
     public void setNombreTorneo(String nombreTorneo) {
-        this.nombreTorneo = nombreTorneo;
+        if (nombreTorneo != null && !nombreTorneo.trim().isEmpty()) {
+            this.nombreTorneo = nombreTorneo.trim();
+        }
+        // Si está vacío o es null, no se asigna
     }
 
     public int getAnio() {
@@ -39,7 +45,10 @@ public class Torneo {
     }
 
     public void setAnio(int anio) {
-        this.anio = anio;
+        if (anio >= 1900 && anio <= 2100) {
+            this.anio = anio;
+        }
+        // Solo asigna si el año está en un rango razonable
     }
 
     @Override
