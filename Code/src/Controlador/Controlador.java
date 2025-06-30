@@ -96,25 +96,51 @@ public class Controlador {
     }
 
     private void listarEquipos() {
-        vista.mostrarMensaje("=== LISTA DE EQUIPOS ===");
-        String sql = "SELECT * FROM Equipo";
+        vista.mostrarMensaje("=== LISTA DE EQUIPOS Y SUS JUGADORES ===");
+
+        String sqlEquipos = "SELECT * FROM Equipo";
+        String sqlJugadores = "SELECT nombre, apellido, nro_camiseta, posicion FROM Jugador WHERE id_equipo = ?";
 
         try (Connection con = Conexion.getConnection();
-             Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+             Statement stEquipos = con.createStatement();
+             ResultSet rsEquipos = stEquipos.executeQuery(sqlEquipos)) {
 
-            while (rs.next()) {
-                int id = rs.getInt("id_equipo");
-                String nombre = rs.getString("nombre_equipo");
-                String ciudad = rs.getString("ciudad");
+            while (rsEquipos.next()) {
+                int id = rsEquipos.getInt("id_equipo");
+                String nombre = rsEquipos.getString("nombre_equipo");
+                String ciudad = rsEquipos.getString("ciudad");
 
-                vista.mostrarMensaje("ID: " + id + " | Nombre: " + nombre + " | Ciudad: " + ciudad);
+                vista.mostrarMensaje("\n➡️ Equipo: " + nombre + " (ID: " + id + ") | Ciudad: " + ciudad);
+
+                // Consultar jugadores del equipo actual
+                PreparedStatement psJugadores = con.prepareStatement(sqlJugadores);
+                psJugadores.setInt(1, id);
+                ResultSet rsJugadores = psJugadores.executeQuery();
+
+                boolean tieneJugadores = false;
+                while (rsJugadores.next()) {
+                    tieneJugadores = true;
+                    String nombreJugador = rsJugadores.getString("nombre");
+                    String apellido = rsJugadores.getString("apellido");
+                    int camiseta = rsJugadores.getInt("nro_camiseta");
+                    String posicion = rsJugadores.getString("posicion");
+
+                    vista.mostrarMensaje("   - 👤 " + nombreJugador + " " + apellido + " | #" + camiseta + " | " + posicion);
+                }
+
+                if (!tieneJugadores) {
+                    vista.mostrarMensaje("   (Sin jugadores registrados)");
+                }
+
+                rsJugadores.close();
+                psJugadores.close();
             }
 
         } catch (Exception e) {
             vista.mostrarMensaje("❌ Error al listar equipos: " + e.getMessage());
         }
     }
+
 
     private void listarJugadores() {
         vista.mostrarMensaje("=== LISTA DE JUGADORES ===");
@@ -173,7 +199,10 @@ public class Controlador {
                 int equipo1 = equipos.get(i);
                 int equipo2 = equipos.get(i + 1);
 
-                vista.mostrarMensaje("Partido: Equipo ID " + equipo1 + " vs Equipo ID " + equipo2);
+                String nombreEquipo1 = obtenerNombreEquipo(con, equipo1);
+                String nombreEquipo2 = obtenerNombreEquipo(con, equipo2);
+                vista.mostrarMensaje("Partido: " + nombreEquipo1 + " vs " + nombreEquipo2);
+
                 int puntos1 = vista.pedirPuntosUno(); // reutilizado como pedir puntos
                 int puntos2 = vista.pedirPuntosDos();
 
@@ -190,7 +219,10 @@ public class Controlador {
                 int equipo1 = semifinalistas.get(i);
                 int equipo2 = semifinalistas.get(i + 1);
 
-                vista.mostrarMensaje("Partido: Equipo ID " + equipo1 + " vs Equipo ID " + equipo2);
+                String nombreEquipo1 = obtenerNombreEquipo(con, equipo1);
+                String nombreEquipo2 = obtenerNombreEquipo(con, equipo2);
+                vista.mostrarMensaje("Partido: " + nombreEquipo1 + " vs " + nombreEquipo2);
+
                 int puntos1 = vista.pedirPuntosUno();
                 int puntos2 = vista.pedirPuntosDos();
 
@@ -205,7 +237,10 @@ public class Controlador {
             int equipo1 = finalistas.get(0);
             int equipo2 = finalistas.get(1);
 
-            vista.mostrarMensaje("Final: Equipo ID " + equipo1 + " vs Equipo ID " + equipo2);
+            String nombreEquipo1 = obtenerNombreEquipo(con, equipo1);
+            String nombreEquipo2 = obtenerNombreEquipo(con, equipo2);
+            vista.mostrarMensaje("Partido: " + nombreEquipo1 + " vs " + nombreEquipo2);
+
             int puntos1 = vista.pedirPuntosUno();
             int puntos2 = vista.pedirPuntosDos();
 
@@ -223,12 +258,32 @@ public class Controlador {
 
 
 
-            vista.mostrarMensaje("\n🏆 ¡El equipo campeón tiene el ID: " + campeon + "!");
+            String nombreCampeon = obtenerNombreEquipo(con, campeon);
+            vista.mostrarMensaje("\n🏆 ¡El equipo campeón es: " + nombreCampeon + "!");
+
+
         } catch (Exception e) {
             vista.mostrarMensaje("❌ Error al iniciar torneo: " + e.getMessage());
         }
 
     }
+
+    private String obtenerNombreEquipo(Connection con, int idEquipo) {
+        String nombre = "Desconocido";
+        try {
+            String sql = "SELECT nombre_equipo FROM Equipo WHERE id_equipo = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, idEquipo);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                nombre = rs.getString("nombre_equipo");
+            }
+        } catch (Exception e) {
+            vista.mostrarMensaje("❌ Error al obtener nombre del equipo: " + e.getMessage());
+        }
+        return nombre;
+    }
+
 
     private void registrarPartido(Connection con, int idLocal, int idVisitante, int puntosLocal, int puntosVisitante, String fase, int idTorneo) {
         try {
