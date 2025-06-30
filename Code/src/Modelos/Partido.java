@@ -43,7 +43,10 @@ public class Partido {
     }
 
     public void setIdEquipoLocal(int idEquipoLocal) {
-        this.idEquipoLocal = idEquipoLocal;
+        if (idEquipoLocal > 0) {
+            this.idEquipoLocal = idEquipoLocal;
+        }
+        // Solo asigna si el ID es positivo
     }
 
     public int getIdEquipoVisitante() {
@@ -51,7 +54,10 @@ public class Partido {
     }
 
     public void setIdEquipoVisitante(int idEquipoVisitante) {
-        this.idEquipoVisitante = idEquipoVisitante;
+        if (idEquipoVisitante > 0) {
+            this.idEquipoVisitante = idEquipoVisitante;
+        }
+        // Solo asigna si el ID es positivo
     }
 
     public int getPuntosLocal() {
@@ -59,7 +65,10 @@ public class Partido {
     }
 
     public void setPuntosLocal(int puntosLocal) {
-        this.puntosLocal = puntosLocal;
+        if (puntosLocal >= 0) {
+            this.puntosLocal = puntosLocal;
+        }
+        // Solo asigna si los puntos son no negativos
     }
 
     public int getPuntosVisitante() {
@@ -67,7 +76,10 @@ public class Partido {
     }
 
     public void setPuntosVisitante(int puntosVisitante) {
-        this.puntosVisitante = puntosVisitante;
+        if (puntosVisitante >= 0) {
+            this.puntosVisitante = puntosVisitante;
+        }
+        // Solo asigna si los puntos son no negativos
     }
 
     public String getFase() {
@@ -75,7 +87,10 @@ public class Partido {
     }
 
     public void setFase(String fase) {
-        this.fase = fase;
+        if (fase != null && !fase.trim().isEmpty()) {
+            this.fase = fase.trim();
+        }
+        // Si está vacío o es null, no se asigna
     }
 
     @Override

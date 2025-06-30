@@ -33,7 +33,10 @@ public class Jugador {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        if (nombre != null && !nombre.trim().isEmpty()) {
+            this.nombre = nombre.trim();
+        }
+        // Si está vacío o es null, no se asigna
     }
 
     public String getApellido() {
@@ -41,7 +44,10 @@ public class Jugador {
     }
 
     public void setApellido(String apellido) {
-        this.apellido = apellido;
+        if (apellido != null && !apellido.trim().isEmpty()) {
+            this.apellido = apellido.trim();
+        }
+        // Si está vacío o es null, no se asigna
     }
 
     public int getNro_camiste() {
@@ -49,7 +55,10 @@ public class Jugador {
     }
 
     public void setNro_camiste(int nro_camiste) {
-        this.nro_camiste = nro_camiste;
+        if (nro_camiste > 0) {
+            this.nro_camiste = nro_camiste;
+        }
+        // Solo asigna si el número es positivo
     }
 
     public String getPosicion() {
@@ -57,7 +66,10 @@ public class Jugador {
     }
 
     public void setPosicion(String posicion) {
-        this.posicion = posicion;
+        if (posicion != null && !posicion.trim().isEmpty()) {
+            this.posicion = posicion.trim();
+        }
+        // Si está vacío o es null, no se asigna
     }
 
     public Equipo getEquipo() {

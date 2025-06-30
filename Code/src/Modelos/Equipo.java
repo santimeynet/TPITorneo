@@ -27,7 +27,10 @@ public class Equipo {
     }
 
     public void setNombre_equipo(String nombre_equipo) {
-        this.nombre_equipo = nombre_equipo;
+        if (nombre_equipo != null && !nombre_equipo.trim().isEmpty()) {
+            this.nombre_equipo = nombre_equipo.trim();
+        }
+        // Si está vacío o es null, no se asigna
     }
 
     public String getCiudad() {
@@ -35,7 +38,10 @@ public class Equipo {
     }
 
     public void setCiudad(String ciudad) {
-        this.ciudad = ciudad;
+        if (ciudad != null && !ciudad.trim().isEmpty()) {
+            this.ciudad = ciudad.trim();
+        }
+        // Si está vacío o es null, no se asigna
     }
 
     @Override
