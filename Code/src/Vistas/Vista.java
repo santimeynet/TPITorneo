@@ -48,18 +48,6 @@ public class Vista {
 
 
 
-    public int pedirCodigo(String tipo){
-        while(true) {
-            try {
-                System.out.println("Ingrese el código (" + tipo + "): ");
-                return this.sc.nextInt();
-            } catch(java.util.InputMismatchException e) {
-                System.out.println("Error: Por favor ingrese un número entero válido.");
-                this.sc.nextLine(); // Limpia el buffer del scanner
-            }
-        }
-    }
-
     public String pedirNombre(String tipo){
         System.out.println("Ingrese el nombre (" + tipo + "): ");
         return this.sc.next();
@@ -75,22 +63,7 @@ public class Vista {
         return this.sc.next();
     }
 
-    public String pedirRubro(){
-        System.out.println("Ingrese el rubro: ");
-        return this.sc.next();
-    }
 
-    public int pedirStock(){
-        while(true) {
-            try {
-                System.out.println("Ingrese la cantidad de stock existente: ");
-                return this.sc.nextInt();
-            } catch(java.util.InputMismatchException e) {
-                System.out.println("Error: Por favor ingrese un número entero válido.");
-                this.sc.nextLine(); // Limpia el buffer del scanner
-            }
-        }
-    }
 
     public int pedirPuntosUno(){
         while(true) {
@@ -116,10 +89,6 @@ public class Vista {
         }
     }
 
-    public double pedirPrecio(String tipoPrecio){
-        System.out.println("Ingrese el precio de " + tipoPrecio + ": ");
-        return this.sc.nextDouble();
-    }
 
     public void mostrarMensaje(String mensaje){
         System.out.println(mensaje);
