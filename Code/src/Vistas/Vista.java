@@ -25,7 +25,7 @@ public class Vista {
     }
 
     public int pedirEdad() {
-        System.out.print("Ingrese la edad: ");
+        System.out.print("Ingrese el número de la dorsal: ");
         return this.sc.nextInt();
     }
 
@@ -72,7 +72,7 @@ public class Vista {
                 return this.sc.nextInt();
             } catch(java.util.InputMismatchException e) {
                 System.out.println("Error: Por favor ingrese un número entero válido.");
-                this.sc.nextLine(); // Limpia el buffer del scanner
+                this.sc.nextLine();
             }
         }
     }
@@ -84,7 +84,7 @@ public class Vista {
                 return this.sc.nextInt();
             } catch(java.util.InputMismatchException e) {
                 System.out.println("Error: Por favor ingrese un número entero válido.");
-                this.sc.nextLine(); // Limpia el buffer del scanner
+                this.sc.nextLine();
             }
         }
     }

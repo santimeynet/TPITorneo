@@ -64,10 +64,10 @@ public class Controlador {
             ps.setString(2, ciudad);
             ps.executeUpdate();
 
-            vista.mostrarMensaje("✅ Equipo registrado en MySQL.");
+            vista.mostrarMensaje("Equipo registrado con éxito.");
 
         } catch (Exception e) {
-            vista.mostrarMensaje("❌ Error al registrar equipo: " + e.getMessage());
+            vista.mostrarMensaje("Error al registrar equipo: " + e.getMessage());
         }
     }
 
@@ -88,10 +88,10 @@ public class Controlador {
             ps.setInt(5, idEquipo);
             ps.executeUpdate();
 
-            vista.mostrarMensaje("✅ Jugador registrado en MySQL.");
+            vista.mostrarMensaje("Jugador registrado con éxito.");
 
         } catch (Exception e) {
-            vista.mostrarMensaje("❌ Error al registrar jugador: " + e.getMessage());
+            vista.mostrarMensaje("Error al registrar jugador: " + e.getMessage());
         }
     }
 
@@ -110,9 +110,9 @@ public class Controlador {
                 String nombre = rsEquipos.getString("nombre_equipo");
                 String ciudad = rsEquipos.getString("ciudad");
 
-                vista.mostrarMensaje("\n➡️ Equipo: " + nombre + " (ID: " + id + ") | Ciudad: " + ciudad);
+                vista.mostrarMensaje("\nEquipo: " + nombre + " (ID: " + id + ") | Ciudad: " + ciudad);
 
-                // Consultar jugadores del equipo actual
+                //consultar jugadores del equipo
                 PreparedStatement psJugadores = con.prepareStatement(sqlJugadores);
                 psJugadores.setInt(1, id);
                 ResultSet rsJugadores = psJugadores.executeQuery();
@@ -137,7 +137,7 @@ public class Controlador {
             }
 
         } catch (Exception e) {
-            vista.mostrarMensaje("❌ Error al listar equipos: " + e.getMessage());
+            vista.mostrarMensaje("Error al listar equipos: " + e.getMessage());
         }
     }
 
@@ -160,16 +160,17 @@ public class Controlador {
             }
 
         } catch (Exception e) {
-            vista.mostrarMensaje("❌ Error al listar jugadores: " + e.getMessage());
+            vista.mostrarMensaje("Error al listar jugadores: " + e.getMessage());
         }
     }
+
 
     private void iniciarTorneo() {
         String nombreTorneo = vista.pedirNombre("Torneo");
         int anio = vista.pedirAnio();
 
         try (Connection con = Conexion.getConnection()) {
-            // Crear el torneo
+            //crear torneo
             String sql = "INSERT INTO Torneo (nombre_torneo, año) VALUES (?, ?)";
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, nombreTorneo);
@@ -182,9 +183,9 @@ public class Controlador {
                 idTorneo = rs.getInt(1);
             }
 
-            vista.mostrarMensaje("✅ Torneo registrado con ID: " + idTorneo);
+            vista.mostrarMensaje("Torneo registrado con ID: " + idTorneo);
 
-            // === INGRESAR 8 EQUIPOS PARTICIPANTES ===
+            // ingresar los 8 participantes
             List<Integer> equipos = new ArrayList<>();
             vista.mostrarMensaje("\n=== Ingreso de 8 equipos participantes (por ID) ===");
             for (int i = 1; i <= 8; i++) {
@@ -192,7 +193,7 @@ public class Controlador {
                 equipos.add(idEquipo);
             }
 
-            // === CUARTOS DE FINAL ===
+            // cuartos de final
             vista.mostrarMensaje("\n=== Cuartos de Final ===");
             List<Integer> semifinalistas = new ArrayList<>();
             for (int i = 0; i < equipos.size(); i += 2) {
@@ -212,7 +213,7 @@ public class Controlador {
                 registrarPartido(con, equipo1, equipo2, puntos1, puntos2, "Cuartos", idTorneo);
             }
 
-            // === SEMIFINALES ===
+            // semis
             vista.mostrarMensaje("\n=== Semifinales ===");
             List<Integer> finalistas = new ArrayList<>();
             for (int i = 0; i < semifinalistas.size(); i += 2) {
@@ -232,7 +233,7 @@ public class Controlador {
                 registrarPartido(con, equipo1, equipo2, puntos1, puntos2, "Semis", idTorneo);
             }
 
-            // === FINAL ===
+            // final
             vista.mostrarMensaje("\n=== Final ===");
             int equipo1 = finalistas.get(0);
             int equipo2 = finalistas.get(1);
@@ -247,23 +248,23 @@ public class Controlador {
             int campeon = (puntos1 > puntos2) ? equipo1 : equipo2;
             registrarPartido(con, equipo1, equipo2, puntos1, puntos2, "Final", idTorneo);
 
-            // Actualizar torneo con el equipo campeón
+            //actualizar torneo con el equipo campeon
             String updateSql = "UPDATE Torneo SET ganador = ? WHERE id_torneo = ?";
             PreparedStatement updatePs = con.prepareStatement(updateSql);
             updatePs.setInt(1, campeon);
             updatePs.setInt(2, idTorneo);
             updatePs.executeUpdate();
 
-            vista.mostrarMensaje("🏅 El equipo campeón fue guardado en el torneo.");
+            vista.mostrarMensaje("El equipo campeón fue guardado en el torneo.");
 
 
 
             String nombreCampeon = obtenerNombreEquipo(con, campeon);
-            vista.mostrarMensaje("\n🏆 ¡El equipo campeón es: " + nombreCampeon + "!");
+            vista.mostrarMensaje("\n¡El equipo campeón es: " + nombreCampeon + "!");
 
 
         } catch (Exception e) {
-            vista.mostrarMensaje("❌ Error al iniciar torneo: " + e.getMessage());
+            vista.mostrarMensaje("Error al iniciar torneo: " + e.getMessage());
         }
 
     }
@@ -279,7 +280,7 @@ public class Controlador {
                 nombre = rs.getString("nombre_equipo");
             }
         } catch (Exception e) {
-            vista.mostrarMensaje("❌ Error al obtener nombre del equipo: " + e.getMessage());
+            vista.mostrarMensaje("Error al obtener nombre del equipo: " + e.getMessage());
         }
         return nombre;
     }
@@ -298,9 +299,9 @@ public class Controlador {
             ps.setString(6, fase);
             ps.executeUpdate();
 
-            vista.mostrarMensaje("📌 Partido registrado en fase " + fase);
+            vista.mostrarMensaje("Partido registrado en fase " + fase);
         } catch (Exception e) {
-            vista.mostrarMensaje("❌ Error al registrar partido: " + e.getMessage());
+            vista.mostrarMensaje("Error al registrar partido: " + e.getMessage());
         }
     }
 
@@ -308,7 +309,9 @@ public class Controlador {
 
     private void listarTorneos() {
         vista.mostrarMensaje("=== LISTA DE TORNEOS ===");
-        String sql = "SELECT * FROM Torneo";
+        String sql = "SELECT t.id_torneo, t.nombre_torneo, t.año, e.nombre_equipo AS nombre_ganador " +
+                "FROM Torneo t " +
+                "LEFT JOIN Equipo e ON t.ganador = e.id_equipo";
 
         try (Connection con = Conexion.getConnection();
              Statement st = con.createStatement();
@@ -318,12 +321,13 @@ public class Controlador {
                 int id = rs.getInt("id_torneo");
                 String nombre = rs.getString("nombre_torneo");
                 int anio = rs.getInt("año");
+                String nombre_ganador = rs.getString("nombre_ganador");
 
-                vista.mostrarMensaje("ID: " + id + " | Nombre: " + nombre + " | Año: " + anio);
+                vista.mostrarMensaje("ID: " + id + " | Nombre: " + nombre + " | Año: " + anio + " | Ganador: " + nombre_ganador);
             }
 
         } catch (Exception e) {
-            vista.mostrarMensaje("❌ Error al listar torneos: " + e.getMessage());
+            vista.mostrarMensaje("Error al listar torneos: " + e.getMessage());
         }
     }
 }
